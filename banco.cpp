@@ -1,7 +1,7 @@
-#include "class-declaration/banco.h"
+#include "./class-declaration/banco.h"
 #include <stdexcept>
+#include <algorithm>
 
-// Inicializar el puntero a instancia como nullptr
 Banco *Banco::instancia = nullptr;
 
 Banco *Banco::getInstancia()
@@ -13,34 +13,38 @@ Banco *Banco::getInstancia()
     return instancia;
 }
 
-void Banco::agregarCliente(const Cliente &cliente)
+void Banco::agregarCliente(Cliente *cliente)
 {
     clientes.push_back(cliente);
 }
 
 void Banco::eliminarCliente(const std::string &dni)
 {
-    for (auto &cliente : clientes)
+    for (Cliente *cliente : clientes)
     {
-        if (cliente.getDni() == dni)
+        if (cliente->getDni() == dni)
         {
-            cliente.setEstado("BAJA");
+            cliente->setEstado("BAJA");
             return;
         }
     }
     throw std::runtime_error("Cliente no encontrado");
 }
 
-Cliente Banco::obtenerCliente(const std::string &dni) const
+Cliente *Banco::obtenerCliente(const std::string &dni) const
 {
-    for (const auto &cliente : clientes)
+    for (Cliente *cliente : clientes)
     {
-        if (cliente.getDni() == dni)
+        if (cliente->getDni() == dni)
         {
             return cliente;
         }
     }
     throw std::runtime_error("Cliente no encontrado");
+}
+std::vector<Cliente *> Banco::obtenerTodosLosClientes() const
+{
+    return clientes;
 }
 
 void Banco::registrarTransaccion(const Transaccion &transaccion)
@@ -52,22 +56,22 @@ void Banco::registrarTransaccion(const Transaccion &transaccion)
         {
             if (transaccion.getMoneda() == "Pesos")
             {
-                if (transaccion.getTipoTransaccion() == "Depósito")
+                if (transaccion.getTipoTransaccion() == "Deposito")
                 {
                     cuenta.depositarPesos(transaccion.getMonto());
                 }
-                else if (transaccion.getTipoTransaccion() == "Extracción")
+                else if (transaccion.getTipoTransaccion() == "Extraccion")
                 {
                     cuenta.extraerPesos(transaccion.getMonto());
                 }
             }
             else if (transaccion.getMoneda() == "Dolares")
             {
-                if (transaccion.getTipoTransaccion() == "Depósito")
+                if (transaccion.getTipoTransaccion() == "Deposito")
                 {
                     cuenta.depositarDolares(transaccion.getMonto());
                 }
-                else if (transaccion.getTipoTransaccion() == "Extracción")
+                else if (transaccion.getTipoTransaccion() == "Extraccion")
                 {
                     cuenta.extraerDolares(transaccion.getMonto());
                 }
@@ -76,11 +80,6 @@ void Banco::registrarTransaccion(const Transaccion &transaccion)
         }
     }
     throw std::runtime_error("Cuenta no encontrada para la transacción");
-}
-
-std::vector<Cliente> Banco::obtenerTodosLosClientes() const
-{
-    return clientes;
 }
 
 std::vector<Transaccion> Banco::obtenerTransaccionesPorCliente(const std::string &dni) const
@@ -128,4 +127,12 @@ std::vector<Transaccion> Banco::obtenerTransaccionesPorAnio(int anio) const
 std::vector<Transaccion> Banco::obtenerTodasLasTransacciones() const
 {
     return transacciones;
+}
+
+Banco::~Banco()
+{
+    for (auto cliente : clientes)
+    {
+        delete cliente;
+    }
 }

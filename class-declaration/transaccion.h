@@ -7,7 +7,7 @@ class Transaccion
 {
 private:
     std::string dniCliente;
-    std::string tipoTransaccion; // Depósito o Extracción
+    std::string tipoTransaccion; 
     double monto;
     std::string moneda; // Pesos o Dolares
     std::string fecha;

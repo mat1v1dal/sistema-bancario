@@ -1,25 +1,28 @@
 #ifndef CLIENTEFACTORY_H
 #define CLIENTEFACTORY_H
 
-#include "Cliente.h"
+#include "cliente.h"
+#include "clienteOro.h"
+#include "clientePlata.h"
+#include "clientePlatino.h"
 #include <stdexcept>
 
 class ClienteFactory
 {
 public:
-    static Cliente crearCliente(const std::string &tipoCliente, const std::string &dni, const std::string &nombre, int anioIngreso)
+    static Cliente *crearCliente(const std::string &tipoCliente, const std::string &dni, const std::string &nombre, int anioIngreso)
     {
         if (tipoCliente == "Plata")
         {
-            return Cliente(dni, nombre, "Plata", anioIngreso, "ACTIVO");
+            return new ClientePlata(dni, nombre, anioIngreso, "ACTIVO");
         }
         else if (tipoCliente == "Oro")
         {
-            return Cliente(dni, nombre, "Oro", anioIngreso, "ACTIVO");
+            return new ClienteOro(dni, nombre, anioIngreso, "ACTIVO");
         }
         else if (tipoCliente == "Platino")
         {
-            return Cliente(dni, nombre, "Platino", anioIngreso, "ACTIVO");
+            return new ClientePlatino(dni, nombre, anioIngreso, "ACTIVO");
         }
         else
         {

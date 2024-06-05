@@ -11,11 +11,10 @@ class Banco
 {
 private:
     static Banco *instancia;
-    std::vector<Cliente> clientes;
+    std::vector<Cliente *> clientes;
     std::vector<Cuenta> cuentas;
     std::vector<Transaccion> transacciones;
 
-    // Constructor privado para evitar la creación directa
     Banco() {}
 
 public:
@@ -23,17 +22,19 @@ public:
     static Banco *getInstancia();
 
     // Métodos para gestionar clientes, cuentas y transacciones
-    void agregarCliente(const Cliente &cliente);
+    void agregarCliente(Cliente *cliente);
     void eliminarCliente(const std::string &dni);
-    Cliente obtenerCliente(const std::string &dni) const;
+    Cliente *obtenerCliente(const std::string &dni) const;
     void registrarTransaccion(const Transaccion &transaccion);
 
     // Métodos para consultas
-    std::vector<Cliente> obtenerTodosLosClientes() const;
+    std::vector<Cliente *> obtenerTodosLosClientes() const;
     std::vector<Transaccion> obtenerTransaccionesPorCliente(const std::string &dni) const;
     std::vector<Transaccion> obtenerTransaccionesPorMes(int mes, int anio) const;
     std::vector<Transaccion> obtenerTransaccionesPorAnio(int anio) const;
     std::vector<Transaccion> obtenerTodasLasTransacciones() const;
+
+    ~Banco();
 };
 
 #endif // BANCO_H
