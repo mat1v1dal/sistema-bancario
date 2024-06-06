@@ -1,3 +1,23 @@
+# Índice
+
+1. [Sistema bancario](#sistema-bancario)
+   - [Autor](#autor)
+   - [Tecnologias utilizadas](#tecnologias-utilizadas)
+   - [Para compilar el proyecto](#para-compilar-el-proyecto)
+   - [Patrones de diseño utilizados](#patrones-de-diseño-utilizados)
+2. [Clase Banco](#clase-banco)
+   - [Métodos Principales](#métodos-principales)
+   - [Métodos para Obtener Transacciones](#métodos-para-obtener-transacciones)
+3. [Enfoque y Métodos en la Clase Cliente y ClienteFactory](#enfoque-y-métodos-en-la-clase-cliente-y-clientefactory)
+   - [Uso de Punteros a Cliente](#uso-de-punteros-a-cliente)
+   - [Métodos Principales de Cliente](#métodos-principales-de-cliente)
+   - [Clase ClienteFactory](#clase-clientefactory)
+4. [Documentación de la Estrategia para el Uso de Archivos](#documentación-de-la-estrategia-para-el-uso-de-archivos)
+   - [Cantidad de Archivos de Texto a Utilizar](#cantidad-de-archivos-de-texto-a-utilizar)
+   - [Datos a Escribir en Cada Archivo](#datos-a-escribir-en-cada-archivo)
+   - [Asociación entre Archivos](#asociación-entre-archivos)
+   - [Formato para Guardar los Datos](#formato-para-guardar-los-datos)
+   - [Serialización/Deserialización de Datos](#serializacióndeserialización-de-datos)
 
 # Sistema bancario
 
@@ -110,6 +130,68 @@ En la clase `ClienteFactory`, el método `crearCliente` devuelve un puntero a `C
 
 ## Clase ClienteFactory
 
-La clase `ClienteFactory` implementa el patrón Factory Method para crear instancias de diferentes tipos de clientes sin conocer las clases concretas. Utiliza un puntero a `Cliente` como tipo de retorno para lograr la abstracción necesaria y la flexibilidad en la creación de clientes.
+La clase `ClienteFactory` implementa el patrón Factory Method para crear instancias de diferentes tipos de clientes sin conocer las clases concretas. Utiliza un puntero a `Cliente` como tipo de retorno para lograr la abstracción necesaria y la flexibilidad en la creación de clientes, asi tambien para almacenar los punteros a clientes en un solo vector.
 
 Este enfoque proporciona una separación efectiva entre la creación de objetos y su uso, lo que facilita la extensión y mantenimiento del código. Además, permite agregar nuevos tipos de clientes sin modificar el código existente, lo que mejora la escalabilidad y la modularidad del sistema.
+
+
+# Documentación de la Estrategia para el Uso de Archivos
+
+En esta sección, se documenta la estrategia utilizada para gestionar los archivos de texto en el programa, incluyendo la cantidad de archivos, los datos a escribir en cada archivo, el formato de almacenamiento y la serialización/deserialización de datos.
+
+## Cantidad de Archivos de Texto a Utilizar
+
+Se utilizan dos archivos de texto en el programa:
+
+- `clientes.txt` - para almacenar los datos de los clientes.
+- `transacciones.txt` - para almacenar los datos de las transacciones.
+
+## Datos a Escribir en Cada Archivo
+
+### Archivo `clientes.txt`
+
+Este archivo almacena los siguientes datos de cada cliente:
+
+- DNI (Documento Nacional de Identidad)
+- Nombre
+- Tipo de Cliente (Plata, Oro, Platino)
+- Año de Ingreso
+- Estado (ACTIVO, BAJA)
+
+**Ejemplo de `clientes.txt`:**
+12345678,Juan Perez,Plata,2021,ACTIVO
+87654321,Maria Gomez,Oro,2020,ACTIVO
+
+
+### Archivo `transacciones.txt`
+
+Este archivo almacena los siguientes datos de cada transacción:
+
+- DNI del Cliente
+- Tipo de Transacción (Depósito, Extracción)
+- Monto
+- Moneda (Pesos, Dólares)
+- Fecha (formato YYYY-MM-DD)
+
+**Ejemplo de `transacciones.txt`:**
+
+12345678,Depósito,1000.50,Pesos,2023-05-01
+87654321,Extracción,500.00,Dólares,2023-05-02
+
+
+## Asociación entre Archivos
+
+Los archivos `clientes.txt` y `transacciones.txt` están asociados a través del campo DNI del cliente. Cada transacción en `transacciones.txt` se refiere a un cliente específico identificado por su DNI. Esto permite relacionar fácilmente las transacciones con los clientes correspondientes.
+
+## Formato para Guardar los Datos
+
+Los datos se almacenan en formato CSV (Comma-Separated Values), donde cada atributo se separa por una coma. 
+
+## Serialización/Deserialización de Datos
+
+Para serializar y deserializar datos que no sean `std::string`, se utilizan las siguientes estrategias:
+
+- **Enteros (`int`) y números de punto flotante (`double`):**
+  - Serialización: Se convierten a `std::string` utilizando `std::to_string()`.
+  - Deserialización: Se convierten de `std::string` a su tipo original utilizando `std::stoi()` para enteros y `std::stod()` para números de punto flotante.
+

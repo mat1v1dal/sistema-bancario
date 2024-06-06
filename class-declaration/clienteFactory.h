@@ -26,9 +26,9 @@ public:
         }
         else
         {
-            throw std::invalid_argument("Tipo de cliente no válido");
+            throw std::invalid_argument("Tipo de cliente no valido");
         }
     }
 };
 
-#endif // CLIENTEFACTORY_H
+#endif
