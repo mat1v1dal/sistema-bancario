@@ -1,43 +1,32 @@
 #include "./class-declaration/cuenta.h"
 #include <stdexcept>
 
-Cuenta::Cuenta(std::string dniCliente, double saldoPesos, double saldoDolares)
-    : dniCliente(dniCliente), saldoPesos(saldoPesos), saldoDolares(saldoDolares) {}
+Cuenta::Cuenta(std::string dniCliente, double monto, std::string moneda)
+    : dniCliente(dniCliente), saldo(monto), tipo(moneda) {}
 
 std::string Cuenta::getDniCliente() const { return dniCliente; }
-double Cuenta::getSaldoPesos() const { return saldoPesos; }
-double Cuenta::getSaldoDolares() const { return saldoDolares; }
-
-void Cuenta::depositarPesos(double monto)
+double Cuenta::getSaldo() const { return saldo; }
+std::string Cuenta::getTipo() const { return tipo; }
+void Cuenta::depositar(double monto)
 {
-    saldoPesos += monto;
+    if (monto > 0)
+    {
+        saldo += monto;
+    }
+    else
+    {
+        throw std::runtime_error("El monto a depositar debe ser mayor a 0.");
+    }
 }
 
-void Cuenta::extraerPesos(double monto)
+void Cuenta::extraer(double monto)
 {
-    if (saldoPesos >= monto)
+    if (saldo >= monto)
     {
-        saldoPesos -= monto;
+        saldo -= monto;
     }
     else
     {
         throw std::runtime_error("Saldo insuficiente en pesos.");
-    }
-}
-
-void Cuenta::depositarDolares(double monto)
-{
-    saldoDolares += monto;
-}
-
-void Cuenta::extraerDolares(double monto)
-{
-    if (saldoDolares >= monto)
-    {
-        saldoDolares -= monto;
-    }
-    else
-    {
-        throw std::runtime_error("Saldo insuficiente en dolares.");
     }
 }

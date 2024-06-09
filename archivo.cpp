@@ -1,11 +1,10 @@
 #include "./class-declaration/archivo.h"
-#include <fstream>
-#include <sstream>
 using namespace std;
 void cargarDatosDesdeArchivos(Banco *banco)
 {
     ifstream archivoClientes("./archivos-txt/clientes.txt");
     ifstream archivoTransacciones("./archivos-txt/transacciones.txt");
+    ifstream archivoCuentas("./archivos-txt/cuentas.txt");
     string linea;
 
     // Cargar clientes
@@ -38,7 +37,27 @@ void cargarDatosDesdeArchivos(Banco *banco)
 
         double monto = stod(montoStr);
         Transaccion transaccion = TransaccionFactory::crearTransaccion(dniCliente, tipoTransaccion, monto, moneda, fecha);
-        banco->registrarTransaccion(transaccion);
+        banco->registrarTransaccion(transaccion, 0);
+    }
+    // cargar cuentas
+    while (getline(archivoCuentas, linea))
+    {
+        istringstream iss(linea);
+        string dniCliente, tipoCuenta, saldoStr;
+        getline(iss, dniCliente, ',');
+        getline(iss, saldoStr, ',');
+        getline(iss, tipoCuenta, ',');
+
+        double saldo = stod(saldoStr);
+
+        for (Cliente *cliente : banco->obtenerTodosLosClientes())
+        {
+            if (cliente->getDni() == dniCliente)
+            {
+                Cuenta cuenta = CuentaFactory::crearCuenta(dniCliente, saldo, tipoCuenta);
+                cliente->agregarCuenta(cuenta);
+            }
+        }
     }
 }
 
@@ -46,6 +65,7 @@ void guardarDatosEnArchivos(Banco *banco)
 {
     ofstream archivoClientes("./archivos-txt/clientes.txt");
     ofstream archivoTransacciones("./archivos-txt/transacciones.txt");
+    ofstream archivoCuentas("./archivos-txt/cuentas.txt");
 
     // Guardar clientes
     vector<Cliente *> clientes = banco->obtenerTodosLosClientes();
@@ -56,6 +76,22 @@ void guardarDatosEnArchivos(Banco *banco)
                         << cliente->getTipoCliente() << ","
                         << cliente->getAnioIngreso() << ","
                         << cliente->getEstado() << endl;
+
+        // Guardar cuentas
+        vector<Cuenta> cuentasPesos = cliente->getCuentasPesos();
+        vector<Cuenta> cuentasDolares = cliente->getCuentasDolares();
+        for (const auto &cuenta : cuentasPesos)
+        {
+            archivoCuentas << cliente->getDni() << ","
+                           << cuenta.getSaldo() << ","
+                           << "pesos" << endl;
+        }
+        for (const auto &cuenta : cuentasDolares)
+        {
+            archivoCuentas << cliente->getDni() << ","
+                           << cuenta.getSaldo() << ","
+                           << "dolares" << endl;
+        }
     }
 
     // Guardar transacciones

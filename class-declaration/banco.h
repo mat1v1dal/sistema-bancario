@@ -1,9 +1,9 @@
 #ifndef BANCO_H
 #define BANCO_H
 
-#include "Cliente.h"
-#include "Cuenta.h"
-#include "Transaccion.h"
+#include "cliente.h"
+#include "cuenta.h"
+#include "transaccion.h"
 #include <vector>
 #include <string>
 
@@ -23,9 +23,10 @@ public:
 
     // Métodos para gestionar clientes, cuentas y transacciones
     void agregarCliente(Cliente *cliente);
+    void agregarCuenta(const Cuenta &cuenta);
     void eliminarCliente(const std::string &dni);
     Cliente *obtenerCliente(const std::string &dni) const;
-    void registrarTransaccion(const Transaccion &transaccion);
+    void registrarTransaccion(const Transaccion &transaccion, int nroCuenta);
 
     // Métodos para consultas
     std::vector<Cliente *> obtenerTodosLosClientes() const;

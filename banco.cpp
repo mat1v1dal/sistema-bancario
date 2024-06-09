@@ -47,33 +47,33 @@ std::vector<Cliente *> Banco::obtenerTodosLosClientes() const
     return clientes;
 }
 
-void Banco::registrarTransaccion(const Transaccion &transaccion)
+void Banco::registrarTransaccion(const Transaccion &transaccion, int nroCuenta)
 {
-    transacciones.push_back(transaccion);
-    for (auto &cuenta : cuentas)
+    for (Cliente *cliente : clientes)
     {
-        if (cuenta.getDniCliente() == transaccion.getDniCliente())
+        if (cliente->getDni() == transaccion.getDniCliente())
         {
-            if (transaccion.getMoneda() == "Pesos")
+            transacciones.push_back(transaccion);
+            if (transaccion.getMoneda() == "pesos")
             {
-                if (transaccion.getTipoTransaccion() == "Deposito")
+                if (transaccion.getTipoTransaccion() == "deposito")
                 {
-                    cuenta.depositarPesos(transaccion.getMonto());
+                    cliente->getCuentasPesos()[nroCuenta].depositar(transaccion.getMonto());
                 }
-                else if (transaccion.getTipoTransaccion() == "Extraccion")
+                else if (transaccion.getTipoTransaccion() == "extraccion")
                 {
-                    cuenta.extraerPesos(transaccion.getMonto());
+                    cliente->getCuentasPesos()[nroCuenta].extraer(transaccion.getMonto());
                 }
             }
             else if (transaccion.getMoneda() == "Dolares")
             {
                 if (transaccion.getTipoTransaccion() == "Deposito")
                 {
-                    cuenta.depositarDolares(transaccion.getMonto());
+                    cliente->getCuentasDolares()[nroCuenta].depositar(transaccion.getMonto());
                 }
                 else if (transaccion.getTipoTransaccion() == "Extraccion")
                 {
-                    cuenta.extraerDolares(transaccion.getMonto());
+                    cliente->getCuentasDolares()[nroCuenta].extraer(transaccion.getMonto());
                 }
             }
             return;

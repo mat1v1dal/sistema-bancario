@@ -1,24 +1,20 @@
 #ifndef CUENTA_H
 #define CUENTA_H
-
 #include <string>
-
 class Cuenta
 {
 private:
+    double saldo;
     std::string dniCliente;
-    double saldoPesos;
-    double saldoDolares;
+    std::string tipo;
 
 public:
-    Cuenta(std::string dniCliente, double saldoPesos = 0, double saldoDolares = 0);
+    Cuenta(std::string dniCliente, double saldo = 0, std::string tipo = "");
     std::string getDniCliente() const;
-    double getSaldoPesos() const;
-    double getSaldoDolares() const;
-    void depositarPesos(double monto);
-    void extraerPesos(double monto);
-    void depositarDolares(double monto);
-    void extraerDolares(double monto);
+    double getSaldo() const;
+    std::string getTipo() const;
+    void depositar(double monto);
+    void extraer(double monto);
 };
 
 #endif // CUENTA_H
