@@ -4,6 +4,7 @@
 #include "banco.h"
 #include "clienteFactory.h"
 #include "transaccionFactory.h"
+#include "credito.h"
 #include <fstream>
 #include <sstream>
 #include <string>

@@ -1,5 +1,6 @@
 #include "./class-declaration/banco.h"
 #include <stdexcept>
+#include <vector>
 #include <algorithm>
 
 Banco *Banco::instancia = nullptr;
@@ -15,6 +16,13 @@ Banco *Banco::getInstancia()
 
 void Banco::agregarCliente(Cliente *cliente)
 {
+    for (Cliente *c : clientes)
+    {
+        if (c->getDni() == cliente->getDni())
+        {
+            throw std::runtime_error("Cliente ya existe");
+        }
+    }
     clientes.push_back(cliente);
 }
 
@@ -47,49 +55,76 @@ std::vector<Cliente *> Banco::obtenerTodosLosClientes() const
     return clientes;
 }
 
+void Banco::cargarTransacciones(const Transaccion &transaccion)
+{
+    transacciones.push_back(transaccion);
+}
+
 void Banco::registrarTransaccion(const Transaccion &transaccion, int nroCuenta)
 {
-    for (Cliente *cliente : clientes)
+    // Encuentra el cliente
+    Cliente *cliente = nullptr;
+    for (Cliente *c : clientes)
     {
-        if (cliente->getDni() == transaccion.getDniCliente())
+        if (c->getDni() == transaccion.getDniCliente())
         {
-            transacciones.push_back(transaccion);
-            if (transaccion.getMoneda() == "pesos")
-            {
-                if (transaccion.getTipoTransaccion() == "deposito")
-                {
-                    cliente->getCuentasPesos()[nroCuenta].depositar(transaccion.getMonto());
-                }
-                else if (transaccion.getTipoTransaccion() == "extraccion")
-                {
-                    cliente->getCuentasPesos()[nroCuenta].extraer(transaccion.getMonto());
-                }
-            }
-            else if (transaccion.getMoneda() == "Dolares")
-            {
-                if (transaccion.getTipoTransaccion() == "Deposito")
-                {
-                    cliente->getCuentasDolares()[nroCuenta].depositar(transaccion.getMonto());
-                }
-                else if (transaccion.getTipoTransaccion() == "Extraccion")
-                {
-                    cliente->getCuentasDolares()[nroCuenta].extraer(transaccion.getMonto());
-                }
-            }
-            return;
+            cliente = c;
+            break;
         }
     }
-    throw std::runtime_error("Cuenta no encontrada para la transacción");
+
+    if (cliente == nullptr)
+    {
+        throw std::runtime_error("Cliente no encontrado para la transacción");
+    }
+
+    // Encuentra la cuenta del cliente
+    std::vector<Cuenta *> cuentaPesos = cliente->getCuentasPesos();
+    std::vector<Cuenta *> cuentaDolares = cliente->getCuentasDolares();
+
+    if (transaccion.getMoneda() == "pesos")
+    {
+        if (cuentaPesos.empty())
+        {
+            throw std::runtime_error("No hay cuenta en pesos para este cliente");
+        }
+        if (transaccion.getTipoTransaccion() == "deposito")
+        {
+            cuentaPesos[0]->depositar(transaccion.getMonto());
+        }
+        else if (transaccion.getTipoTransaccion() == "extraccion")
+        {
+            cuentaPesos[0]->extraer(transaccion.getMonto());
+        }
+    }
+    else if (transaccion.getMoneda() == "dolares")
+    {
+        if (cuentaDolares.empty())
+        {
+            throw std::runtime_error("No hay cuenta en dólares para este cliente");
+        }
+        if (transaccion.getTipoTransaccion() == "deposito")
+        {
+            cuentaDolares[0]->depositar(transaccion.getMonto());
+        }
+        else if (transaccion.getTipoTransaccion() == "extraccion")
+        {
+            cuentaDolares[0]->extraer(transaccion.getMonto());
+        }
+    }
+
+    // Registra la transacción
+    transacciones.push_back(transaccion);
 }
 
 std::vector<Transaccion> Banco::obtenerTransaccionesPorCliente(const std::string &dni) const
 {
     std::vector<Transaccion> resultado;
-    for (const auto &transaccion : transacciones)
+    for (const Transaccion &t : transacciones)
     {
-        if (transaccion.getDniCliente() == dni)
+        if (t.getDniCliente() == dni)
         {
-            resultado.push_back(transaccion);
+            resultado.push_back(t);
         }
     }
     return resultado;

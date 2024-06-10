@@ -25,9 +25,22 @@ void mostrarMenu()
     cout << "3. Registrar Transacción" << endl;
     cout << "4. Detalle de Cliente por número de Cliente" << endl;
     cout << "5. Listado de todos los clientes" << endl;
-    cout << "6. Listado de transacciones por clientes" << endl;
+    cout << "6. Listado de cuentas" << endl;
     cout << "7. Informes de extracciones y depósitos" << endl;
-    cout << "8. Guardar y Salir" << endl;
+    cout << "8. Agregar linea de credito" << endl;
+    cout << "9. Ver lineas de credito" << endl;
+    cout << "10. Guardar y Salir" << endl;
+    cout << "Seleccione una opción: ";
+}
+
+void mostrarSubmenuInformes()
+{
+    cout << "===== Informes de Extracciones y Depósitos =====" << endl;
+    cout << "1. En un mes determinado" << endl;
+    cout << "2. En un año determinado" << endl;
+    cout << "3. Transacciones por DNI" << endl;
+    cout << "4. Todas las transacciones" << endl;
+    cout << "5. Volver" << endl;
     cout << "Seleccione una opción: ";
 }
 
@@ -62,14 +75,21 @@ int main()
             Cliente *nuevoCliente = ClienteFactory::crearCliente(tipoCliente, dni, nombre, anioIngreso);
 
             // Crear cuentas para el cliente
-            Cuenta cuentaPesos = CuentaFactory::crearCuenta(dni, 0, "pesos");
-            Cuenta cuentaDolares = CuentaFactory::crearCuenta(dni, 0, "dolares");
+            Cuenta *cuentaPesos = CuentaFactory::crearCuenta(dni, 0, "pesos");
+            Cuenta *cuentaDolares = CuentaFactory::crearCuenta(dni, 0, "dolares");
 
             nuevoCliente->agregarCuenta(cuentaPesos);
             nuevoCliente->agregarCuenta(cuentaDolares);
 
-            banco->agregarCliente(nuevoCliente);
-            cout << "Cliente y cuentas creados con éxito." << endl;
+            try
+            {
+                banco->agregarCliente(nuevoCliente);
+                cout << "Cliente y cuentas creados con éxito." << endl;
+            }
+            catch (const exception &e)
+            {
+                cerr << e.what() << endl;
+            }
             break;
         }
         case 2:
@@ -94,11 +114,11 @@ int main()
             double monto;
             cout << "Ingrese DNI del Cliente: ";
             cin >> dniCliente;
-            cout << "Ingrese Tipo de Transacción (Depósito, Extracción): ";
+            cout << "Ingrese Tipo de Transacción (deposito, extraccion): ";
             cin >> tipoTransaccion;
             cout << "Ingrese Monto: ";
             cin >> monto;
-            cout << "Ingrese Moneda (Pesos, Dolares): ";
+            cout << "Ingrese Moneda (pesos, dolares): ";
             cin >> moneda;
             cout << "Ingrese Fecha (YYYY-MM-DD): ";
             cin >> fecha;
@@ -122,25 +142,25 @@ int main()
             try
             {
                 Cliente *cliente = banco->obtenerCliente(dni);
-                cout << cliente->getDni() << endl;
-                cout << cliente->getNombre() << endl;
-                cout << cliente->getTipoCliente() << endl;
-                cout << cliente->getAnioIngreso() << endl;
-                cout << cliente->getEstado() << endl;
+                cout << cliente->getDni() << " "
+                     << cliente->getNombre() << " "
+                     << cliente->getTipoCliente() << " "
+                     << cliente->getAnioIngreso() << " "
+                     << cliente->getEstado() << endl;
 
-                vector<Cuenta> cuentasPesos = cliente->getCuentasPesos();
-                vector<Cuenta> cuentasDolares = cliente->getCuentasDolares();
+                vector<Cuenta *> cuentasPesos = cliente->getCuentasPesos();
+                vector<Cuenta *> cuentasDolares = cliente->getCuentasDolares();
 
                 cout << "Cuentas en Pesos:" << endl;
                 for (const auto &cuenta : cuentasPesos)
                 {
-                    cout << "Saldo: " << cuenta.getSaldo() << endl;
+                    cout << "Saldo: " << cuenta->getSaldo() << endl;
                 }
 
                 cout << "Cuentas en Dolares:" << endl;
                 for (const auto &cuenta : cuentasDolares)
                 {
-                    cout << "Saldo: " << cuenta.getSaldo() << endl;
+                    cout << "Saldo: " << cuenta->getSaldo() << endl;
                 }
             }
             catch (const exception &e)
@@ -154,33 +174,38 @@ int main()
             vector<Cliente *> clientes = banco->obtenerTodosLosClientes();
             for (const auto &cliente : clientes)
             {
-                cout << cliente->getDni() << endl;
-                cout << cliente->getNombre() << endl;
-                cout << cliente->getTipoCliente() << endl;
-                cout << cliente->getAnioIngreso() << endl;
-                cout << cliente->getEstado() << endl;
+                cout << cliente->getDni() << " "
+                     << cliente->getNombre() << " "
+                     << cliente->getTipoCliente() << " "
+                     << cliente->getAnioIngreso() << " "
+                     << cliente->getEstado() << endl;
             }
             break;
         }
         case 6:
         {
-            string dni;
-            cout << "Ingrese DNI del Cliente: ";
-            cin >> dni;
-            vector<Transaccion> transacciones = banco->obtenerTransaccionesPorCliente(dni);
-            for (const auto &transaccion : transacciones)
+            for (Cliente *cliente : banco->obtenerTodosLosClientes())
             {
-                cout << "DNI: " << transaccion.getDniCliente() << ", Tipo: " << transaccion.getTipoTransaccion()
-                     << ", Monto: " << transaccion.getMonto() << ", Moneda: " << transaccion.getMoneda()
-                     << ", Fecha: " << transaccion.getFecha() << endl;
+                vector<Cuenta *> cuentaPesos = cliente->getCuentasPesos();
+                vector<Cuenta *> cuentaDolares = cliente->getCuentasDolares();
+                for (const auto &cuenta : cuentaPesos)
+                {
+                    cout << "DNI: " << cuenta->getDniCliente() << ", Saldo: " << cuenta->getSaldo() << ", Moneda: " << cuenta->getTipo() << endl;
+                }
+                for (const auto &cuenta : cuentaDolares)
+                {
+                    cout << "DNI: " << cuenta->getDniCliente() << ", Saldo: " << cuenta->getSaldo() << ", Moneda: " << cuenta->getTipo() << endl;
+                }
             }
             break;
         }
         case 7:
         {
             int criterio;
-            cout << "Seleccione criterio: 1. Mes, 2. Año, 3. Todas: ";
+            limpiarConsola();
+            mostrarSubmenuInformes();
             cin >> criterio;
+
             if (criterio == 1)
             {
                 int mes, anio;
@@ -211,6 +236,19 @@ int main()
             }
             else if (criterio == 3)
             {
+                string dni;
+                cout << "Ingrese DNI del Cliente: ";
+                cin >> dni;
+                vector<Transaccion> transacciones = banco->obtenerTransaccionesPorCliente(dni);
+                for (const auto &transaccion : transacciones)
+                {
+                    cout << "DNI: " << transaccion.getDniCliente() << ", Tipo: " << transaccion.getTipoTransaccion()
+                         << ", Monto: " << transaccion.getMonto() << ", Moneda: " << transaccion.getMoneda()
+                         << ", Fecha: " << transaccion.getFecha() << endl;
+                }
+            }
+            else if (criterio == 4)
+            {
                 vector<Transaccion> transacciones = banco->obtenerTodasLasTransacciones();
                 for (const auto &transaccion : transacciones)
                 {
@@ -219,11 +257,43 @@ int main()
                          << ", Fecha: " << transaccion.getFecha() << endl;
                 }
             }
+            else
+            {
+                cout << "Opción no válida. Intente nuevamente." << endl;
+            }
             break;
         }
         case 8:
+        {
+            string dniCliente, nombreCredito;
+            cout << "Ingrese DNI del Cliente: ";
+            cin >> dniCliente;
+            cout << "Ingrese Nombre de la Tarjeta de Crédito: ";
+            cin >> nombreCredito;
+            banco->solicitarTarjetaDeCredito(dniCliente);
+            cout << "Tarjeta de Crédito solicitada con éxito." << endl;
+            break;
+        }
+        case 9:
+        {
+
+            for (Cliente *cliente : banco->obtenerTodosLosClientes())
+            {
+                string dni = cliente->getDni();
+
+                for (const auto &tarjeta : cliente->getTarjeta())
+                {
+                    string nombre = tarjeta->getNombre();
+                    double limiteCredito = tarjeta->getLimiteCredito();
+                    cout << "DNI: " << cliente->getDni() << ", Nombre: " << nombre << ", Límite de Crédito: " << tarjeta->getLimiteCredito() << endl;
+                }
+            }
+            break;
+        }
+        case 10:
             // Guardar datos en archivos
             guardarDatosEnArchivos(banco);
+            delete banco;
             cout << "Datos guardados con éxito. Saliendo del sistema..." << endl;
             break;
         default:
@@ -231,14 +301,13 @@ int main()
             break;
         }
 
-        if (opcion != 8)
+        if (opcion != 10)
         {
             cout << "Presione Enter para continuar...";
             cin.ignore();
             cin.get();
         }
-
-    } while (opcion != 8);
+    } while (opcion != 10);
 
     return 0;
 }

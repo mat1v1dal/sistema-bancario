@@ -27,13 +27,26 @@ public:
     void eliminarCliente(const std::string &dni);
     Cliente *obtenerCliente(const std::string &dni) const;
     void registrarTransaccion(const Transaccion &transaccion, int nroCuenta);
+    void cargarTransacciones(const Transaccion &transaccion);
 
     // Métodos para consultas
     std::vector<Cliente *> obtenerTodosLosClientes() const;
+    std::vector<Cuenta> obtenerTodasLasCuentas() const;
     std::vector<Transaccion> obtenerTransaccionesPorCliente(const std::string &dni) const;
     std::vector<Transaccion> obtenerTransaccionesPorMes(int mes, int anio) const;
     std::vector<Transaccion> obtenerTransaccionesPorAnio(int anio) const;
     std::vector<Transaccion> obtenerTodasLasTransacciones() const;
+
+    void solicitarTarjetaDeCredito(const std::string &dniCliente)
+    {
+        for (Cliente *cliente : clientes)
+        {
+            if (cliente->getDni() == dniCliente)
+            {
+                cliente->getTarjetaDeCredito();
+            }
+        }
+    }
 
     ~Banco();
 };

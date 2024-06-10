@@ -7,15 +7,15 @@
 class CuentaFactory
 {
 public:
-    static Cuenta crearCuenta(std::string dniCliente, double saldo = 0, std::string tipo = "")
+    static Cuenta *crearCuenta(std::string dniCliente, double saldo = 0, std::string tipo = "")
     {
         if (tipo == "pesos")
         {
-            return Cuenta(dniCliente, saldo, "pesos");
+            return new Cuenta(dniCliente, saldo, "pesos");
         }
         else if (tipo == "dolares")
         {
-            return Cuenta(dniCliente, saldo, "dolares");
+            return new Cuenta(dniCliente, saldo, "dolares");
         }
         else
         {
