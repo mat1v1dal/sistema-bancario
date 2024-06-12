@@ -268,10 +268,15 @@ int main()
             string dniCliente, nombreCredito;
             cout << "Ingrese DNI del Cliente: ";
             cin >> dniCliente;
-            cout << "Ingrese Nombre de la Tarjeta de Crédito: ";
-            cin >> nombreCredito;
-            banco->solicitarTarjetaDeCredito(dniCliente);
-            cout << "Tarjeta de Crédito solicitada con éxito." << endl;
+            try
+            {
+                banco->solicitarTarjetaDeCredito(dniCliente);
+                cout << "Tarjeta de Crédito solicitada con éxito." << endl;
+            }
+            catch (const exception &e)
+            {
+                cerr << e.what() << endl;
+            }
             break;
         }
         case 9:
@@ -280,12 +285,12 @@ int main()
             for (Cliente *cliente : banco->obtenerTodosLosClientes())
             {
                 string dni = cliente->getDni();
-
-                for (const auto &tarjeta : cliente->getTarjeta())
+                TarjetaDeCredito *tarjeta = cliente->returnTarjeta();
+                if (tarjeta != nullptr)
                 {
-                    string nombre = tarjeta->getNombre();
+                    string nombreTarjeta = tarjeta->getNombre();
                     double limiteCredito = tarjeta->getLimiteCredito();
-                    cout << "DNI: " << cliente->getDni() << ", Nombre: " << nombre << ", Límite de Crédito: " << tarjeta->getLimiteCredito() << endl;
+                    cout << "DNI: " << cliente->getDni() << ", Nombre: " << nombreTarjeta << ", Límite de Crédito: " << tarjeta->getLimiteCredito() << endl;
                 }
             }
             break;

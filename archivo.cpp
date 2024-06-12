@@ -59,7 +59,7 @@ void cargarDatosDesdeArchivos(Banco *banco)
         {
             if (cliente->getDni() == dniCliente)
             {
-                cliente->getTarjetaDeCredito();
+                cliente->getTarjeta();
                 break;
             }
         }
@@ -101,6 +101,7 @@ void guardarDatosEnArchivos(Banco *banco)
         // Guardar cuentas
         vector<Cuenta *> cuentasPesos = cliente->getCuentasPesos();
         vector<Cuenta *> cuentasDolares = cliente->getCuentasDolares();
+        TarjetaDeCredito *tarjeta = cliente->returnTarjeta();
         for (const auto &cuenta : cuentasPesos)
         {
             archivoCuentas << cliente->getDni() << ","
@@ -113,12 +114,10 @@ void guardarDatosEnArchivos(Banco *banco)
                            << cuenta->getSaldo() << ","
                            << "dolares" << endl;
         }
-        for (const auto &tarjeta : cliente->getTarjeta())
-        {
-            archivoTarjetas << cliente->getDni() << ","
-                            << tarjeta->getNombre() << ","
-                            << tarjeta->getLimiteCredito() << endl;
-        }
+
+        archivoTarjetas << cliente->getDni() << ","
+                        << tarjeta->getNombre() << ","
+                        << tarjeta->getLimiteCredito() << endl;
     }
 
     // Guardar transacciones

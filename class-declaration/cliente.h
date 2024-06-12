@@ -16,9 +16,10 @@ public:
     std::string getEstado() const;
     void setEstado(const std::string &estado);
     void agregarCuenta(Cuenta *cuenta);
-    std::vector<TarjetaDeCredito *> getTarjeta() { return tarjetas; }
-
-    std::vector<Cuenta *> getCuentasPesos() const;
+    virtual void getTarjeta() = 0;
+    TarjetaDeCredito *returnTarjeta() const { return tarjeta; }
+    std::vector<Cuenta *>
+    getCuentasPesos() const;
     std::vector<Cuenta *> getCuentasDolares() const;
     virtual std::string getTipoCliente() const = 0;
     ~Cliente()
@@ -31,12 +32,8 @@ public:
         {
             delete cuenta;
         }
-        for (auto tarjeta : tarjetas)
-        {
-            delete tarjeta;
-        }
+        delete tarjeta;
     }
-    virtual void getTarjetaDeCredito() = 0;
 
 private:
     std::string dni;
@@ -47,7 +44,7 @@ private:
     std::vector<Cuenta *> cuentasDolares;
 
 protected:
-    std::vector<TarjetaDeCredito *> tarjetas;
+    TarjetaDeCredito *tarjeta = nullptr;
 };
 
 #endif // CLIENTE_H

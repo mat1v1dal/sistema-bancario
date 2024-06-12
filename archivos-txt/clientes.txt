@@ -1,0 +1,2 @@
+123,mati,Plata,2000,ACTIVO
+200,mati,Oro,200,ACTIVO

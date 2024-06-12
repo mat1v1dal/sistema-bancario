@@ -10,9 +10,9 @@ public:
         : Cliente(dni, nombre, anioIngreso, estado) {}
     std::string getTipoCliente() const { return "Oro"; }
 
-    void getTarjetaDeCredito() override
+    void getTarjeta() override
     {
-        tarjetas.push_back(new TarjetaDeCredito("Credix", 250000));
+        tarjeta = new TarjetaDeCredito("Credix", 250000);
     }
 };
 

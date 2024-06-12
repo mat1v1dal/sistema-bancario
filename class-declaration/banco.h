@@ -43,9 +43,11 @@ public:
         {
             if (cliente->getDni() == dniCliente)
             {
-                cliente->getTarjetaDeCredito();
+                cliente->getTarjeta();
+                return;
             }
         }
+        throw std::runtime_error("Cliente no encontrado");
     }
 
     ~Banco();

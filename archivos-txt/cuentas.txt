@@ -1,0 +1,4 @@
+123,0,pesos
+123,0,dolares
+200,0,pesos
+200,0,dolares

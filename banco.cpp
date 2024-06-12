@@ -20,6 +20,11 @@ void Banco::agregarCliente(Cliente *cliente)
     {
         if (c->getDni() == cliente->getDni())
         {
+            if (c->getEstado() == "BAJA")
+            {
+                c->setEstado("ACTIVO");
+                return;
+            }
             throw std::runtime_error("Cliente ya existe");
         }
     }
