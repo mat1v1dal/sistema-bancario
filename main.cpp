@@ -19,33 +19,34 @@ void limpiarConsola()
 
 void mostrarMenu()
 {
-    cout << "===== Sistema de Gestión Bancaria =====" << endl;
+    cout << "===== Sistema de Gestion Bancaria =====" << endl;
     cout << "1. Agregar Cliente" << endl;
     cout << "2. Eliminar Cliente" << endl;
-    cout << "3. Registrar Transacción" << endl;
-    cout << "4. Detalle de Cliente por número de Cliente" << endl;
+    cout << "3. Registrar Transaccion" << endl;
+    cout << "4. Detalle de Cliente por numero de Cliente" << endl;
     cout << "5. Listado de todos los clientes" << endl;
     cout << "6. Listado de cuentas" << endl;
-    cout << "7. Informes de extracciones y depósitos" << endl;
+    cout << "7. Informes de extracciones y depositos" << endl;
     cout << "8. Agregar linea de credito" << endl;
     cout << "9. Ver lineas de credito" << endl;
     cout << "10. Guardar y Salir" << endl;
-    cout << "Seleccione una opción: ";
+    cout << "Seleccione una opcion: ";
 }
 
 void mostrarSubmenuInformes()
 {
-    cout << "===== Informes de Extracciones y Depósitos =====" << endl;
+    cout << "===== Informes de Extracciones y Depositos =====" << endl;
     cout << "1. En un mes determinado" << endl;
     cout << "2. En un año determinado" << endl;
     cout << "3. Transacciones por DNI" << endl;
     cout << "4. Todas las transacciones" << endl;
     cout << "5. Volver" << endl;
-    cout << "Seleccione una opción: ";
+    cout << "Seleccione una opcion: ";
 }
 
 int main()
 {
+
     Banco *banco = Banco::getInstancia();
 
     // Cargar datos desde archivos
@@ -84,7 +85,7 @@ int main()
             try
             {
                 banco->agregarCliente(nuevoCliente);
-                cout << "Cliente y cuentas creados con éxito." << endl;
+                cout << "Cliente y cuentas creados con exito." << endl;
             }
             catch (const exception &e)
             {
@@ -100,7 +101,7 @@ int main()
             try
             {
                 banco->eliminarCliente(dni);
-                cout << "Cliente eliminado con éxito." << endl;
+                cout << "Cliente eliminado con exito." << endl;
             }
             catch (const exception &e)
             {
@@ -126,7 +127,7 @@ int main()
             {
                 Transaccion nuevaTransaccion = TransaccionFactory::crearTransaccion(dniCliente, tipoTransaccion, monto, moneda, fecha);
                 banco->registrarTransaccion(nuevaTransaccion, 0);
-                cout << "Transacción registrada con éxito." << endl;
+                cout << "Transacción registrada con exito." << endl;
             }
             catch (const exception &e)
             {
@@ -259,7 +260,7 @@ int main()
             }
             else
             {
-                cout << "Opción no válida. Intente nuevamente." << endl;
+                cout << "Opcion no valida. Intente nuevamente." << endl;
             }
             break;
         }
@@ -271,7 +272,7 @@ int main()
             try
             {
                 banco->solicitarTarjetaDeCredito(dniCliente);
-                cout << "Tarjeta de Crédito solicitada con éxito." << endl;
+                cout << "Tarjeta de Credito solicitada con exito." << endl;
             }
             catch (const exception &e)
             {
@@ -299,10 +300,10 @@ int main()
             // Guardar datos en archivos
             guardarDatosEnArchivos(banco);
             delete banco;
-            cout << "Datos guardados con éxito. Saliendo del sistema..." << endl;
+            cout << "Datos guardados con exito. Saliendo del sistema..." << endl;
             break;
         default:
-            cout << "Opción no válida. Intente nuevamente." << endl;
+            cout << "Opcion no valida. Intente nuevamente." << endl;
             break;
         }
 

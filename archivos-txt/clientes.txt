@@ -1,2 +1,2 @@
-123,mati,Plata,2000,ACTIVO
-200,mati,Oro,200,ACTIVO
+123,mati,Platino,2000,ACTIVO
+1234,hola,Oro,2000,ACTIVO
