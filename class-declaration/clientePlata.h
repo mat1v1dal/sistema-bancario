@@ -1,7 +1,7 @@
 #ifndef CLIENTEPLATA_H
 #define CLIENTEPLATA_H
 
-#include "Cliente.h"
+#include "cliente.h"
 
 class ClientePlata : public Cliente
 {

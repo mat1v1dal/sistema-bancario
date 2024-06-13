@@ -1,1 +1,4 @@
 123,deposito,3000,pesos,2004-12-12
+123,deposito,2000,pesos,2023-12-12
+123,deposito,1200,dolares,2003-23-23
+123,extraccion,300,dolares,2003-23-23

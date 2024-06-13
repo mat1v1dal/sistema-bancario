@@ -1,3 +1,7 @@
+/*
+
+
+*/
 using namespace std;
 
 #include "./class-declaration/banco.h"
@@ -23,7 +27,7 @@ void mostrarMenu()
     cout << "1. Agregar Cliente" << endl;
     cout << "2. Eliminar Cliente" << endl;
     cout << "3. Registrar Transaccion" << endl;
-    cout << "4. Detalle de Cliente por numero de Cliente" << endl;
+    cout << "4. Detalle de Cliente por DNI" << endl;
     cout << "5. Listado de todos los clientes" << endl;
     cout << "6. Listado de cuentas" << endl;
     cout << "7. Informes de extracciones y depositos" << endl;

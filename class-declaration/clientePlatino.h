@@ -1,7 +1,7 @@
 #ifndef CLIENTEPLATINO_H
 #define CLIENTEPLATINO_H
 
-#include "Cliente.h"
+#include "cliente.h"
 
 class ClientePlatino : public Cliente
 {
